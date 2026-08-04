@@ -115,7 +115,7 @@
         }
 
         .playlist { 
-            max-height: 200px; 
+            max-height: 200px; /* Reducido un poquito para darle espacio a la ballena */
             overflow-y: auto; 
             text-align: left; 
             background: rgba(10, 5, 15, 0.6); 
@@ -170,6 +170,7 @@
             letter-spacing: 1px;
         }
 
+        /* DISEÑO Y ANIMACIÓN DE LA BALLENA */
         .whale {
             font-size: 28px;
             margin-top: 5px;
@@ -234,6 +235,7 @@
     <ul class="playlist" id="playlist-container"></ul>
 
     <p class="dedication">ti amo ♥</p>
+    <!-- La ballena nadando justo al final -->
     <div class="whale">🐋</div>
 </div>
 
@@ -273,9 +275,7 @@
 
     const audioPlayer = document.getElementById('audio-player');
     const playlistContainer = document.getElementById('playlist-container');
-    const currentSongTitle = document.getElementById('current-song');
-    const waveVisual = document.getElementById('wave-visual');
-    let trackActual = 0;
+
 
 
 
