@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Reproductor Premium</title>
     <style>
-        /* Fondo animado moderno */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background: linear-gradient(-45deg, #0f0c20, #150a21, #050508, #111a24);
@@ -27,7 +26,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Contenedor del reproductor con efecto Neón */
         .player-container { 
             background: rgba(25, 25, 35, 0.85);
             backdrop-filter: blur(10px);
@@ -65,14 +63,12 @@
             border-left: 4px solid #00f2fe;
         }
 
-        /* Cambiar estética del reproductor nativo */
         audio { 
             width: 100%; 
             margin-bottom: 25px; 
-            filter: invert(90%) hue-rotate(180deg); /* Truco para volverlo oscuro y azul */
+            filter: invert(90%) hue-rotate(180deg); 
         }
 
-        /* Lista de reproducción estilizada */
         .playlist { 
             max-height: 280px; 
             overflow-y: auto; 
@@ -85,12 +81,10 @@
             border: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Personalizar la barra de desplazamiento (Scrollbar) */
         .playlist::-webkit-scrollbar { width: 6px; }
         .playlist::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
         .playlist::-webkit-scrollbar-thumb { background: rgba(0, 242, 254, 0.3); border-radius: 10px; }
 
-        /* Elementos de la lista */
         .playlist li { 
             padding: 14px 18px; 
             border-bottom: 1px solid rgba(255,255,255,0.03); 
@@ -108,10 +102,9 @@
         .playlist li:hover { 
             background-color: rgba(0, 242, 254, 0.1); 
             color: #00f2fe; 
-            padding-left: 23px; /* Efecto de desplazamiento al pasar el mouse */
+            padding-left: 23px; 
         }
 
-        /* Canción sonando actualmente */
         .playlist li.active { 
             background: linear-gradient(90deg, #00f2fe, #4facfe); 
             color: #050508; 
@@ -132,7 +125,6 @@
 </div>
 
 <script>
-    // LISTA DE CANCIONES (Tus nombres exactos de archivo de GitHub)
     const canciones = [
         "HUMBE - KINTSUGI.mp3",
         "Herencia De Grandes - Ya Borracho Official Video.mp3",
@@ -171,11 +163,34 @@
     const currentSongTitle = document.getElementById('current-song');
     let trackActual = 0;
 
+    // ESTA FUNCIÓN LIMPIA LOS NOMBRES AUTOMÁTICAMENTE
+    function limpiarNombre(nombreArchivo) {
+        let texto = nombreArchivo.replace('.mp3', '');
+        
+        // Quita corchetes completos y su contenido (ej: [vPDn5xYxqIE])
+        texto = texto.replace(/\[.*?\]/g, '');
+        
+        // Quita palabras comunes de YouTube (sin importar mayúsculas o minúsculas)
+        texto = texto.replace(/official video/gi, '');
+        texto = texto.replace(/official music video/gi, '');
+        texto = texto.replace(/video oficial/gi, '');
+        texto = texto.replace(/official audio/gi, '');
+        texto = texto.replace(/Remasterizado/gi, '');
+        texto = texto.replace(/4K Remix/gi, '');
+        texto = texto.replace(/Audio/gi, '');
+        texto = texto.replace(/ft\..*$/gi, ''); // Borra los "ft. Artista" del final si los hay
+        
+        // Limpia paréntesis vacíos que hayan quedado después de borrar el texto
+        texto = texto.replace(/\(\s*\)/g, '');
+        
+        // Quita espacios extras al inicio o final
+        return texto.trim();
+    }
+
+    // Generar la lista visual limpia
     canciones.forEach((cancion, index) => {
         const li = document.createElement('li');
-        // Limpiamos los textos largos quitando formatos para que luzca estético
-        let nombreLimpio = cancion.replace('.mp3', '');
-        li.textContent = nombreLimpio; 
+        li.textContent = limpiarNombre(cancion); 
         li.onclick = () => cargarCancion(index);
         playlistContainer.appendChild(li);
     });
@@ -183,7 +198,7 @@
     function cargarCancion(index) {
         trackActual = index;
         audioPlayer.src = encodeURIComponent(canciones[index]);
-        currentSongTitle.textContent = canciones[index].replace('.mp3', '');
+        currentSongTitle.textContent = limpiarNombre(canciones[index]);
 
         const elementos = playlistContainer.getElementsByTagName('li');
         for (let i = 0; i < elementos.length; i++) {
@@ -206,4 +221,5 @@
 
 </body>
 </html>
+
 
