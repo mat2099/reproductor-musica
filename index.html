@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Para U.M</title>
-    <!-- Importamos la fuente elegante desde Google Fonts -->
+    <!-- Fuente elegante -->
     <link href="https://googleapis.com" rel="stylesheet">
     
     <style>
@@ -31,6 +31,18 @@
             100% { background-position: 0% 50%; }
         }
 
+        .player-container { 
+            background: rgba(20, 15, 25, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 40px 30px; 
+            border-radius: 30px; 
+            border: 1px solid rgba(255, 117, 140, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 25px rgba(255, 117, 140, 0.15); 
+            width: 440px; 
+            text-align: center; 
+            z-index: 10; 
+        }
+
         .initials-title { 
             font-family: 'Playfair Display', serif;
             font-size: 42px;
@@ -45,22 +57,10 @@
             text-shadow: 0 0 15px rgba(255, 117, 140, 0.3);
         }
 
-        .player-container { 
-            background: rgba(20, 15, 25, 0.85);
-            backdrop-filter: blur(12px);
-            padding: 40px 30px; 
-            border-radius: 30px; 
-            border: 1px solid rgba(255, 117, 140, 0.2);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 25px rgba(255, 117, 140, 0.15); 
-            width: 440px; 
-            text-align: center; 
-            z-index: 10; 
-        }
-
         #current-song { 
             font-style: normal; 
             color: #d1b3ca; 
-            margin-bottom: 25px; 
+            margin-bottom: 20px; 
             height: 55px; 
             display: flex; 
             align-items: center; 
@@ -73,6 +73,43 @@
             border-left: 4px solid #ff758c;
         }
 
+        /* DISEÑO DE LAS ONDAS DE AUDIO */
+        .wave-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 40px;
+            margin-bottom: 20px;
+            gap: 4px;
+        }
+
+        .wave-bar {
+            width: 4px;
+            height: 8px;
+            background: linear-gradient(to top, #ff758c, #ff7eb3);
+            border-radius: 2px;
+            transition: height 0.2s ease;
+        }
+
+        /* Animación activa cuando la música suena */
+        .wave-container.playing .wave-bar {
+            animation: bounce 1.2s ease-in-out infinite alternate;
+        }
+
+        /* Variamos los tiempos de cada barrita para que parezca una onda real */
+        .wave-container.playing .wave-bar:nth-child(1) { animation-delay: 0.1s; }
+        .wave-container.playing .wave-bar:nth-child(2) { animation-delay: 0.4s; }
+        .wave-container.playing .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+        .wave-container.playing .wave-bar:nth-child(4) { animation-delay: 0.6s; }
+        .wave-container.playing .wave-bar:nth-child(5) { animation-delay: 0.3s; }
+        .wave-container.playing .wave-bar:nth-child(6) { animation-delay: 0.5s; }
+        .wave-container.playing .wave-bar:nth-child(7) { animation-delay: 0.1s; }
+
+        @keyframes bounce {
+            0% { height: 8px; }
+            100% { height: 38px; }
+        }
+
         audio { 
             width: 100%; 
             margin-bottom: 25px; 
@@ -80,7 +117,7 @@
         }
 
         .playlist { 
-            max-height: 240px; 
+            max-height: 220px; 
             overflow-y: auto; 
             text-align: left; 
             background: rgba(10, 5, 15, 0.6); 
@@ -122,7 +159,6 @@
             box-shadow: 0 4px 15px rgba(255, 117, 140, 0.4);
         }
 
-        /* Estilo elegante para la dedicatoria final */
         .dedication {
             font-family: 'Playfair Display', serif;
             font-size: 24px;
@@ -138,7 +174,7 @@
 
         .bg-heart {
             position: absolute;
-            color: rgba(255, 117, 140, 0.1);
+            color: rgba(255, 117, 140, 0.08);
             font-size: 24px;
             animation: floatHearts 10s linear infinite;
             bottom: -50px;
@@ -169,11 +205,21 @@
     <h1 class="initials-title">U.M</h1>
     <span id="current-song">Selecciona una canción para ella</span>
     
+    <!-- Contenedor visual de las ondas -->
+    <div class="wave-container" id="wave-visual">
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+    </div>
+
     <audio id="audio-player" controls></audio>
 
     <ul class="playlist" id="playlist-container"></ul>
 
-    <!-- Tu mensaje personalizado al final del contenedor -->
     <p class="dedication">ti amo ♥</p>
 </div>
 
@@ -214,56 +260,17 @@
     const audioPlayer = document.getElementById('audio-player');
     const playlistContainer = document.getElementById('playlist-container');
     const currentSongTitle = document.getElementById('current-song');
+    const waveVisual = document.getElementById('wave-visual');
     let trackActual = 0;
 
     function limpiarNombre(nombreArchivo) {
-        let texto = nombreArchivo.replace('.mp3', '');
+        let texto = name = nombreArchivo.replace('.mp3', '');
         texto = texto.replace(/\[.*?\]/g, '');
         texto = texto.replace(/official video/gi, '');
         texto = texto.replace(/official music video/gi, '');
         texto = texto.replace(/video oficial/gi, '');
         texto = texto.replace(/official audio/gi, '');
-        texto = texto.replace(/Remasterizado/gi, '');
-        texto = texto.replace(/4K Remix/gi, '');
-        texto = texto.replace(/Audio/gi, '');
-        texto = texto.replace(/ft\..*$/gi, '');
-        texto = texto.replace(/\(\s*\)/g, '');
-        return texto.trim();
-    }
 
-    canciones.forEach((cancion, index) => {
-        const li = document.createElement('li');
-        li.textContent = limpiarNombre(cancion); 
-        li.onclick = () => cargarCancion(index);
-        playlistContainer.appendChild(li);
-    });
-
-    function cargarCancion(index) {
-        trackActual = index;
-        audioPlayer.src = encodeURIComponent(canciones[index]);
-        currentSongTitle.textContent = limpiarNombre(canciones[index]);
-
-        const elementos = playlistContainer.getElementsByTagName('li');
-        for (let i = 0; i < elementos.length; i++) {
-            elementos[i].classList.remove('active');
-        }
-        elementos[index].classList.add('active');
-
-        audioPlayer.play();
-    }
-
-    audioPlayer.onended = () => {
-        let siguiente = trackActual + 1;
-        if (siguiente < canciones.length) {
-            cargarCancion(siguiente);
-        } else {
-            cargarCancion(0);
-        }
-    };
-</script>
-
-</body>
-</html>
 
 
 
