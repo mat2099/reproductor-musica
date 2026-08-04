@@ -3,24 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Reproductor de Música</title>
+    <title>Mi Reproductor Premium</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #121212; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-        .player-container { background-color: #1e1e1e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); width: 420px; text-align: center; }
-        h2 { margin-top: 0; margin-bottom: 5px; color: #1DB954; }
-        #current-song { font-style: italic; color: #b3b3b3; margin-bottom: 20px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-        audio { width: 100%; margin-bottom: 20px; }
-        .playlist { max-height: 300px; overflow-y: auto; text-align: left; background: #282828; padding: 0; border-radius: 8px; list-style: none; margin: 0; }
-        .playlist li { padding: 12px 15px; border-bottom: 1px solid #3e3e3e; cursor: pointer; transition: 0.2s; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .playlist li:hover { background-color: #3e3e3e; color: #1DB954; }
-        .playlist li.active { background-color: #1DB954; color: black; font-weight: bold; }
+        /* Fondo animado moderno */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(-45deg, #0f0c20, #150a21, #050508, #111a24);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px; 
+            box-sizing: border-box; 
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Contenedor del reproductor con efecto Neón */
+        .player-container { 
+            background: rgba(25, 25, 35, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 35px 30px; 
+            border-radius: 24px; 
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7), 0 0 20px rgba(0, 242, 254, 0.1); 
+            width: 440px; 
+            text-align: center; 
+        }
+
+        h2 { 
+            margin-top: 0; 
+            margin-bottom: 5px; 
+            font-size: 26px;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #current-song { 
+            font-style: normal; 
+            color: #a0a0c0; 
+            margin-bottom: 25px; 
+            height: 55px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 14px; 
+            font-weight: 500;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 0 15px;
+            border-left: 4px solid #00f2fe;
+        }
+
+        /* Cambiar estética del reproductor nativo */
+        audio { 
+            width: 100%; 
+            margin-bottom: 25px; 
+            filter: invert(90%) hue-rotate(180deg); /* Truco para volverlo oscuro y azul */
+        }
+
+        /* Lista de reproducción estilizada */
+        .playlist { 
+            max-height: 280px; 
+            overflow-y: auto; 
+            text-align: left; 
+            background: rgba(10, 10, 15, 0.6); 
+            padding: 5px; 
+            border-radius: 12px; 
+            list-style: none; 
+            margin: 0; 
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Personalizar la barra de desplazamiento (Scrollbar) */
+        .playlist::-webkit-scrollbar { width: 6px; }
+        .playlist::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+        .playlist::-webkit-scrollbar-thumb { background: rgba(0, 242, 254, 0.3); border-radius: 10px; }
+
+        /* Elementos de la lista */
+        .playlist li { 
+            padding: 14px 18px; 
+            border-bottom: 1px solid rgba(255,255,255,0.03); 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            font-size: 13px; 
+            color: #cbcbdf;
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            border-radius: 8px;
+            margin-bottom: 2px;
+        }
+
+        .playlist li:hover { 
+            background-color: rgba(0, 242, 254, 0.1); 
+            color: #00f2fe; 
+            padding-left: 23px; /* Efecto de desplazamiento al pasar el mouse */
+        }
+
+        /* Canción sonando actualmente */
+        .playlist li.active { 
+            background: linear-gradient(90deg, #00f2fe, #4facfe); 
+            color: #050508; 
+            font-weight: bold; 
+            box-shadow: 0 4px 12px rgba(0, 242, 254, 0.3);
+        }
     </style>
 </head>
 <body>
 
 <div class="player-container">
     <h2>Mi Playlist</h2>
-    <span id="current-song">Selecciona una canción</span>
+    <span id="current-song">Selecciona una canción para reproducir</span>
     
     <audio id="audio-player" controls></audio>
 
@@ -28,7 +132,7 @@
 </div>
 
 <script>
-    // LISTA CORREGIDA A PARTIR DE TUS IMÁGENES DE GITHUB
+    // LISTA DE CANCIONES (Tus nombres exactos de archivo de GitHub)
     const canciones = [
         "HUMBE - KINTSUGI.mp3",
         "Herencia De Grandes - Ya Borracho Official Video.mp3",
@@ -69,15 +173,15 @@
 
     canciones.forEach((cancion, index) => {
         const li = document.createElement('li');
-        li.textContent = cancion.replace('.mp3', ''); 
+        // Limpiamos los textos largos quitando formatos para que luzca estético
+        let nombreLimpio = cancion.replace('.mp3', '');
+        li.textContent = nombreLimpio; 
         li.onclick = () => cargarCancion(index);
         playlistContainer.appendChild(li);
     });
 
     function cargarCancion(index) {
         trackActual = index;
-        
-        // encodeURIComponent se asegura de codificar paréntesis, corchetes, comas y espacios perfectamente
         audioPlayer.src = encodeURIComponent(canciones[index]);
         currentSongTitle.textContent = canciones[index].replace('.mp3', '');
 
@@ -102,3 +206,4 @@
 
 </body>
 </html>
+
