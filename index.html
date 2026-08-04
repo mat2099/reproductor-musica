@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Reproductor de Música</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .player-container { background-color: #1e1e1e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); width: 350px; text-align: center; }
-        h2 { margin-bottom: 5px; color: #1DB954; }
-        #current-song { font-style: italic; color: #b3b3b3; margin-bottom: 20px; display: block; }
+        body { font-family: Arial, sans-serif; background-color: #121212; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .player-container { background-color: #1e1e1e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); width: 420px; text-align: center; }
+        h2 { margin-top: 0; margin-bottom: 5px; color: #1DB954; }
+        #current-song { font-style: italic; color: #b3b3b3; margin-bottom: 20px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
         audio { width: 100%; margin-bottom: 20px; }
-        .playlist { max-height: 200px; overflow-y: auto; text-align: left; background: #282828; padding: 10px; border-radius: 8px; list-style: none; margin: 0; padding-left: 0; }
-        .playlist li { padding: 10px; border-bottom: 1px solid #3e3e3e; cursor: pointer; transition: 0.2s; font-size: 14px; }
+        .playlist { max-height: 300px; overflow-y: auto; text-align: left; background: #282828; padding: 0; border-radius: 8px; list-style: none; margin: 0; }
+        .playlist li { padding: 12px 15px; border-bottom: 1px solid #3e3e3e; cursor: pointer; transition: 0.2s; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .playlist li:hover { background-color: #3e3e3e; color: #1DB954; }
         .playlist li.active { background-color: #1DB954; color: black; font-weight: bold; }
     </style>
@@ -22,24 +22,44 @@
     <h2>Mi Playlist</h2>
     <span id="current-song">Selecciona una canción</span>
     
-    <!-- Elemento de audio nativo -->
     <audio id="audio-player" controls></audio>
 
-    <!-- Lista de canciones en pantalla -->
     <ul class="playlist" id="playlist-container"></ul>
 </div>
 
 <script>
-    // LISTA DE CANCIONES (Escribe el nombre EXACTO de tus archivos .mp3 de GitHub)
+    // LISTA CORREGIDA A PARTIR DE TUS IMÁGENES DE GITHUB
     const canciones = [
-        "Bryan Adams - Heaven (Official Music Video).mp3",
+        "HUMBE - KINTSUGI.mp3",
         "Herencia De Grandes - Ya Borracho Official Video.mp3",
-        "Bacilos - Caraluna (Official Music Video).mp3",
+        "Ken Carson - Swag Overload (Official Audio) [2S9SdfmZp6I].mp3",
         "Labios Compartidos (2019 Remasterizado) [vPDn5xYxqIE].mp3",
-        "Aventura - El Perdedor.mp3",
-        "Andrés Cepeda - Desesperado (Official Video) [N5olyi6xywU].mp3",
+        "Lil Peep - Star Shopping (Official Audio).mp3",
+        "Maluma - ADMV (Official Video).mp3",
         "Manuel Medrano - Bajo El Agua (Video Oficial).mp3",
-        "Yandel - Encantadora (Official Video).mp3"
+        "Marshmello x Lil Peep - Spotlight [Official Audio].mp3",
+        "Myke Towers - EXTASY (Video Oficial).mp3",
+        "OMAR COURTZ (((ousi))) - POR SI MAÑANA NO ESTOY (Official Video).mp3",
+        "OMAR COURTZ (((ousi))), Myke Towers - WHAT U NEED (Official Video).mp3",
+        "OMAR COURTZ (((ousi))), ROA - WO OH OH (Official Video).mp3",
+        "Andrés Cepeda - Desesperado (Official Video) [N5olyi6xywU].mp3",
+        "Avenoir - Shameless.mp3",
+        "Aventura - El Perdedor.mp3",
+        "Bacilos - Caraluna (Official Music Video).mp3",
+        "Bad Bunny - WHERE SHE GOES (Video Oficial) [1f0xYhR9L-E].mp3",
+        "Bryan Adams - Heaven (Official Music Video).mp3",
+        "Calvin Harris - Summer (Official Video).mp3",
+        "Charlie Puth - Attention Official Video.mp3",
+        "Chase Atlantic - Into It (Official Audio).mp3",
+        "Duke Dumont - Ocean Drive.mp3",
+        "Feid - que putas (Audio) [YQ0B5lpH9KE].mp3",
+        "Goo Goo Dolls - Iris Official Music Video 4K Remix.mp3",
+        "Sonder - Too Fast (Official Music Video).mp3",
+        "TMW [opcZUmT4zXM] (1).mp3",
+        "The Weeknd - Can t Feel My Face (Official Video).mp3",
+        "The Weeknd - Wicked Games (Official Video - Explicit).mp3",
+        "Yandel - Encantadora (Official Video).mp3",
+        "Yandel - Explícale (Official Video) ft. Bad Bunny.mp3"
     ];
 
     const audioPlayer = document.getElementById('audio-player');
@@ -47,24 +67,20 @@
     const currentSongTitle = document.getElementById('current-song');
     let trackActual = 0;
 
-    // Generar la lista visual de canciones
     canciones.forEach((cancion, index) => {
         const li = document.createElement('li');
-        // Quitamos el ".mp3" del texto para que se vea más limpio en pantalla
         li.textContent = cancion.replace('.mp3', ''); 
         li.onclick = () => cargarCancion(index);
         playlistContainer.appendChild(li);
     });
 
-    // Función para cargar y reproducir una canción
     function cargarCancion(index) {
         trackActual = index;
         
-        // El truco de la opción A: encodeURIComponent arregla los espacios y corchetes automáticamente
+        // encodeURIComponent se asegura de codificar paréntesis, corchetes, comas y espacios perfectamente
         audioPlayer.src = encodeURIComponent(canciones[index]);
         currentSongTitle.textContent = canciones[index].replace('.mp3', '');
 
-        // Cambiar la canción activa visualmente
         const elementos = playlistContainer.getElementsByTagName('li');
         for (let i = 0; i < elementos.length; i++) {
             elementos[i].classList.remove('active');
@@ -74,13 +90,12 @@
         audioPlayer.play();
     }
 
-    // Al terminar una canción, pasa automáticamente a la siguiente
     audioPlayer.onended = () => {
         let siguiente = trackActual + 1;
         if (siguiente < canciones.length) {
             cargarCancion(siguiente);
         } else {
-            cargarCancion(0); // Vuelve a empezar si era la última
+            cargarCancion(0);
         }
     };
 </script>
